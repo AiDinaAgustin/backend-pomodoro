@@ -61,11 +61,74 @@ paths:
   /users:
     get:
       summary: Get all users
+      security:
+        - bearerAuth: []
       responses:
         '200':
           description: Successful operation
         '400':
           $ref: '#/components/responses/400'
+        '500':
+          $ref: '#/components/responses/500'
+  /pomodoros:
+    post:
+      summary: Create a new Pomodoro
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePomodoro'
+      responses:
+        '201':
+          description: Pomodoro created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pomodoro'
+        '400':
+          $ref: '#/components/responses/400'
+        '500':
+          $ref: '#/components/responses/500'
+  /pomodoros/{pomodoroId}:
+    put:
+      summary: Update the status of a Pomodoro
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: pomodoroId
+          required: true
+          schema:
+            type: integer
+          description: The ID of the Pomodoro to update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdatePomodoroStatus'
+      responses:
+        '200':
+          description: Pomodoro status updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pomodoro'
+        '400':
+          $ref: '#/components/responses/400'
+        '404':
+          description: Pomodoro not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Pomodoro not found
         '500':
           $ref: '#/components/responses/500'
 components:
@@ -86,6 +149,47 @@ components:
           type: string
         password:
           type: string
+    CreatePomodoro:
+      type: object
+      properties:
+        type:
+          type: string
+          enum: [POMODORO, SHORT_BREAK, LONG_BREAK]
+        status:
+          type: string
+          example: active
+    UpdatePomodoroStatus:
+      type: object
+      properties:
+        status:
+          type: string
+          example: pause
+    Pomodoro:
+      type: object
+      properties:
+        id:
+          type: integer
+        userId:
+          type: integer
+        type:
+          type: string
+          enum: [POMODORO, SHORT_BREAK, LONG_BREAK]
+        duration:
+          type: integer
+        startTime:
+          type: string
+          format: date-time
+        endTime:
+          type: string
+          format: date-time
+        status:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
   responses:
     400:
       description: Bad Request
@@ -107,3 +211,10 @@ components:
               message:
                 type: string
                 example: Internal server error
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - bearerAuth: []

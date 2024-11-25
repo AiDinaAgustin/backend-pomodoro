@@ -8,6 +8,7 @@ const swaggerUi = require("swagger-ui-express");
 const YAML = require("yamljs");
 
 const authRoute = require("./src/routes/routeAuth");
+const pomodoroRoute = require("./src/routes/routePomodoro");
 const prisma = PrismaClient;
 const app = express();
 dotenv.config();
@@ -46,6 +47,7 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 //auth route
 app.use(authRoute);
+app.use(pomodoroRoute)
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

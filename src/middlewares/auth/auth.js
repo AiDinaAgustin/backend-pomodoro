@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const { findUserById } = require("../services/serviceAuth");
+const { findUserById } = require("../../services/serviceAuth");
 
 const auth = (req, res, next) => {
   const authHeader = req.headers["authorization"];
