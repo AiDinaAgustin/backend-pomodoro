@@ -4,8 +4,10 @@ const { PrismaClient } = require("@prisma/client");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const fileUpload = require("express-fileupload");
+const swaggerUi = require("swagger-ui-express");
+const YAML = require("yamljs");
 
-const authRoute = require("./src/routes/auth/routeAuth");
+const authRoute = require("./src/routes/routeAuth");
 const prisma = PrismaClient;
 const app = express();
 dotenv.config();
@@ -21,8 +23,6 @@ const allowedOrigins = ["http://localhost:3000", "http://localhost:5173"];
 app.use(
   cors({
     origin: function (origin, callback) {
-      // allow requests with no origin
-      // (like mobile apps or curl requests)
       if (!origin) return callback(null, true);
       if (allowedOrigins.indexOf(origin) === -1) {
         var msg =
@@ -32,13 +32,17 @@ app.use(
       }
       return callback(null, true);
     },
-    credentials: true, // This will allow cookies to be included in the request
+    credentials: true,
   })
 );
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
+
+// Swagger setup
+const swaggerDocument = YAML.load("./swagger.yaml");
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 //auth route
 app.use(authRoute);
