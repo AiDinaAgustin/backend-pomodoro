@@ -43,8 +43,32 @@ const updatePomodoroStatus = async (pomodoroId, status) => {
     }
 }
 
+const getPomodorosByUserId = async (userId) => {
+    try {
+        const pomodoros = await prisma.pomodoro.findMany({
+            where: { userId: userId },
+        });
+        return pomodoros;
+    } catch (error) {
+        throw new Error(error.message);
+    }
+}
+
+const deletePomodoro = async (pomodoroId) => {
+    try {
+        const deletedPomodoro = await prisma.pomodoro.delete({
+            where: { id: pomodoroId },
+        });
+        return deletedPomodoro;
+    } catch (error) {
+        throw new Error(error.message);
+    }
+}
+
 module.exports = {
     createPomodoro,
     getPomodoroById,
-    updatePomodoroStatus
+    updatePomodoroStatus,
+    getPomodorosByUserId,
+    deletePomodoro
 }

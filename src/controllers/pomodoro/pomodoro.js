@@ -1,7 +1,9 @@
 const { 
     createPomodoro,
     getPomodoroById,
-    updatePomodoroStatus
+    updatePomodoroStatus,
+    getPomodorosByUserId,
+    deletePomodoro
 } = require("../../services/servicePomodoro");
 
 const handleCreatePomodoro = async (req, res) => {
@@ -59,7 +61,40 @@ const handleUpdatePomodoroStatus = async (req, res) => {
     }
 }
 
+const handleGetPomodorosByUserId = async (req, res) => {
+    try {
+        const userId = req.user.userToken;
+        const pomodoros = await getPomodorosByUserId(userId);
+        res.status(200).json({ data: pomodoros });
+        return;
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+        return;
+    }
+}
+
+const handleDeletePomodoro = async (req, res) => {
+    try {
+        const { pomodoroId } = req.params;
+
+        const pomodoro = await getPomodoroById(parseInt(pomodoroId));
+        if (!pomodoro) {
+            return res.status(404).json({ message: "Pomodoro not found" });
+        }
+
+        await deletePomodoro(parseInt(pomodoroId));
+
+        res.status(200).json({ message: "Pomodoro deleted successfully" });
+        return;
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+        return;
+    }
+}
+
 module.exports = {
     handleCreatePomodoro,
-    handleUpdatePomodoroStatus
+    handleUpdatePomodoroStatus,
+    handleGetPomodorosByUserId,
+    handleDeletePomodoro
 }
