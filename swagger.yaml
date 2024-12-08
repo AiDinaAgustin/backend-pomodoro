@@ -92,6 +92,23 @@ paths:
           $ref: '#/components/responses/400'
         '500':
           $ref: '#/components/responses/500'
+    get:
+      summary: Get all Pomodoros for a user
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Pomodoro'
+        '400':
+          $ref: '#/components/responses/400'
+        '500':
+          $ref: '#/components/responses/500'
   /pomodoros/{pomodoroId}:
     put:
       summary: Update the status of a Pomodoro
@@ -129,6 +146,189 @@ paths:
                   message:
                     type: string
                     example: Pomodoro not found
+        '500':
+          $ref: '#/components/responses/500'
+    delete:
+      summary: Delete a Pomodoro
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: pomodoroId
+          required: true
+          schema:
+            type: integer
+          description: The ID of the Pomodoro to delete
+      responses:
+        '200':
+          description: Pomodoro deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Pomodoro deleted successfully
+        '400':
+          $ref: '#/components/responses/400'
+        '404':
+          description: Pomodoro not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Pomodoro not found
+        '500':
+          $ref: '#/components/responses/500'
+  /tasks/{pomodoroId}:
+    post:
+      summary: Create a new Task
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: pomodoroId
+          required: true
+          schema:
+            type: integer
+          description: The ID of the Pomodoro to which the Task belongs
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTask'
+      responses:
+        '201':
+          description: Task created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        '400':
+          $ref: '#/components/responses/400'
+        '500':
+          $ref: '#/components/responses/500'
+  /tasks:
+    get:
+      summary: Get all Tasks for a user
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Task'
+        '400':
+          $ref: '#/components/responses/400'
+        '500':
+          $ref: '#/components/responses/500'
+  /detailTasks/{taskId}:
+    post:
+      summary: Create a new DetailTask
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: taskId
+          required: true
+          schema:
+            type: integer
+          description: The ID of the Task to which the DetailTask belongs
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateDetailTask'
+      responses:
+        '201':
+          description: DetailTask created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DetailTask'
+        '400':
+          $ref: '#/components/responses/400'
+        '500':
+          $ref: '#/components/responses/500'
+    get:
+      summary: Get all DetailTasks for a Task
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: taskId
+          required: true
+          schema:
+            type: integer
+          description: The ID of the Task to get DetailTasks for
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DetailTask'
+        '400':
+          $ref: '#/components/responses/400'
+        '500':
+          $ref: '#/components/responses/500'
+  /detailTasks/{detailTaskId}:
+    put:
+      summary: Update a DetailTask
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: detailTaskId
+          required: true
+          schema:
+            type: integer
+          description: The ID of the DetailTask to update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateDetailTask'
+      responses:
+        '200':
+          description: DetailTask updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DetailTask'
+        '400':
+          $ref: '#/components/responses/400'
+        '500':
+          $ref: '#/components/responses/500'
+    delete:
+      summary: Delete a DetailTask
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: detailTaskId
+          required: true
+          schema:
+            type: integer
+          description: The ID of the DetailTask to delete
+      responses:
+        '200':
+          description: DetailTask deleted successfully
+        '400':
+          $ref: '#/components/responses/400'
         '500':
           $ref: '#/components/responses/500'
 components:
@@ -190,6 +390,60 @@ components:
         updatedAt:
           type: string
           format: date-time
+    Task:
+      type: object
+      properties:
+        id:
+          type: integer
+        userId:
+          type: integer
+        pomodoroId:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+        completed:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    CreateTask:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        completed:
+          type: boolean
+    DetailTask:
+      type: object
+      properties:
+        id:
+          type: integer
+        taskId:
+          type: integer
+        title:
+          type: string
+        completed:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    CreateDetailTask:
+      type: object
+      properties:
+        title:
+          type: string
+        completed:
+          type: boolean
   responses:
     400:
       description: Bad Request

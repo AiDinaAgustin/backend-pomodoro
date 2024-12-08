@@ -1,11 +1,11 @@
 const prisma = require("../db");
 
-const createTask = async (userId, taskData) => {
+const createTask = async (userId, pomodoroId, taskData) => {
     try {
         const task = await prisma.task.create({
             data: {
                 userId: userId,
-                pomodoroId: taskData.pomodoroId,
+                pomodoroId: pomodoroId,
                 title: taskData.title,
                 description: taskData.description,
                 completed: taskData.completed || false,

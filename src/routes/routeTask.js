@@ -4,7 +4,7 @@ const { auth } = require("../middlewares/auth/auth");
 
 const { handleCreateTask, handleGetTasksByUserId } = require("../controllers/task/task");
 
-router.post("/tasks", auth, handleCreateTask);
+router.post("/tasks/:pomodoroId", auth, handleCreateTask);
 router.get("/tasks", auth, handleGetTasksByUserId);
 
 module.exports = router;

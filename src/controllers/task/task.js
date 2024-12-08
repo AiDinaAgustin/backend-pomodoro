@@ -3,9 +3,10 @@ const { createTask, getTasksByUserId } = require("../../services/serviceTask");
 const handleCreateTask = async (req, res) => {
     try {
         const userId = req.user.userToken;
+        const { pomodoroId } = req.params;
         const taskData = req.body;
 
-        const newTask = await createTask(userId, taskData);
+        const newTask = await createTask(userId, parseInt(pomodoroId), taskData);
         
         res.status(201).json({ data: newTask });
         return;
