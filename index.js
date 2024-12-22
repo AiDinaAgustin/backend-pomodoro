@@ -6,6 +6,8 @@ const cors = require("cors");
 const fileUpload = require("express-fileupload");
 const swaggerUi = require("swagger-ui-express");
 const YAML = require("yamljs");
+const fs = require("fs");
+const path = require("path");
 
 const authRoute = require("./src/routes/routeAuth");
 const pomodoroRoute = require("./src/routes/routePomodoro");
@@ -14,6 +16,7 @@ const detailTaskRoute = require("./src/routes/routeDetailTask");
 
 const prisma = PrismaClient;
 const app = express();
+
 dotenv.config();
 
 const PORT = process.env.PORT;
@@ -22,7 +25,19 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(fileUpload({ useTempFiles: true }));
 app.use(cookieParser());
-const allowedOrigins = ["http://localhost:3000", "http://localhost:5173"];
+
+const allowedOrigins = [process.env.PRODUCTION, "http://localhost:3000", "http://localhost:5173"];
+
+// Replace placeholder in swagger.yaml with actual PRODUCTION URL
+const swaggerPath = path.join(__dirname, "swagger.yaml");
+let swaggerDocument = YAML.load(swaggerPath);
+
+// Ganti placeholder ${PRODUCTION} dengan nilai dari environment
+swaggerDocument.servers.forEach((server) => {
+  if (server.url) {
+    server.url = server.url.replace("${PRODUCTION}", process.env.PRODUCTION);
+  }
+});
 
 app.use(
   cors({
@@ -38,14 +53,14 @@ app.use(
     },
     credentials: true,
   })
-);
+ );
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
 // Swagger setup
-const swaggerDocument = YAML.load("./swagger.yaml");
+// const swaggerDocument = YAML.load("./swagger.yaml");
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 //auth route
