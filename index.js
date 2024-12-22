@@ -22,7 +22,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(fileUpload({ useTempFiles: true }));
 app.use(cookieParser());
-const allowedOrigins = ["http://8.215.22.182", "http://localhost:3000", "http://localhost:5173"];
+const allowedOrigins = [process.env.PRODUCTION, "http://localhost:3000", "http://localhost:5173"];
 
 app.use(
   cors({
