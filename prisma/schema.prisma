@@ -43,21 +43,20 @@ model Pomodoro {
   createdAt  DateTime     @default(now())
   updatedAt  DateTime     @updatedAt
   user       User         @relation(fields: [userId], references: [id])
-  Tasks      Task[]
+  tasks      Task[]       @relation("PomodoroTasks")
 }
 
 model Task {
-  id         Int          @id @default(autoincrement())
-  userId     Int
-  pomodoroId Int
-  title      String
+  id          Int          @id @default(autoincrement())
+  userId      Int
+  title       String
   description String
-  completed  Boolean
-  createdAt  DateTime     @default(now())
-  updatedAt  DateTime     @updatedAt
-  user       User         @relation(fields: [userId], references: [id])
-  pomodoro   Pomodoro     @relation(fields: [pomodoroId], references: [id])
+  completed   Boolean
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  user        User         @relation(fields: [userId], references: [id])
   DetailTasks DetailTask[]
+  Pomodoros   Pomodoro[]   @relation("PomodoroTasks")
 }
 
 model DetailTask {

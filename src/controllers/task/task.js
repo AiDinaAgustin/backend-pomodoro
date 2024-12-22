@@ -1,14 +1,28 @@
-const { createTask, getTasksByUserId } = require("../../services/serviceTask");
+const { createTask, updateTask, getTasksByUserId } = require("../../services/serviceTask");
 
 const handleCreateTask = async (req, res) => {
     try {
         const userId = req.user.userToken;
-        const { pomodoroId } = req.params;
         const taskData = req.body;
 
-        const newTask = await createTask(userId, parseInt(pomodoroId), taskData);
+        const newTask = await createTask(userId, taskData);
         
         res.status(201).json({ data: newTask });
+        return;
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+        return;
+    }
+}
+
+const handleUpdateTask = async (req, res) => {
+    try {
+        const { taskId } = req.params;
+        const taskData = req.body;
+
+        const updatedTask = await updateTask(parseInt(taskId), taskData);
+        
+        res.status(200).json({ data: updatedTask });
         return;
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -30,5 +44,6 @@ const handleGetTasksByUserId = async (req, res) => {
 
 module.exports = {
     handleCreateTask,
+    handleUpdateTask,
     handleGetTasksByUserId
 }

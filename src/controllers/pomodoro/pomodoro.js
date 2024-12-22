@@ -11,6 +11,10 @@ const handleCreatePomodoro = async (req, res) => {
         const userId = req.user.userToken;
         const pomodoro = req.body;
 
+        if (!pomodoro.taskIds || !Array.isArray(pomodoro.taskIds) || pomodoro.taskIds.length === 0) {
+            return res.status(400).json({ message: "Task IDs are required and should be an array" });
+        }
+
         switch (pomodoro.type) {
             case 'POMODORO':
                 pomodoro.duration = 25;

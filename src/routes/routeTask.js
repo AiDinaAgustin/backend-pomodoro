@@ -2,9 +2,10 @@ const express = require("express");
 const router = express.Router();
 const { auth } = require("../middlewares/auth/auth");
 
-const { handleCreateTask, handleGetTasksByUserId } = require("../controllers/task/task");
+const { handleCreateTask, handleUpdateTask, handleGetTasksByUserId } = require("../controllers/task/task");
 
-router.post("/tasks/:pomodoroId", auth, handleCreateTask);
+router.post("/tasks", auth, handleCreateTask);
+router.put("/tasks/:taskId", auth, handleUpdateTask);
 router.get("/tasks", auth, handleGetTasksByUserId);
 
 module.exports = router;

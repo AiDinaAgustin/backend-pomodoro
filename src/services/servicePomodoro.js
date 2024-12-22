@@ -11,6 +11,9 @@ const createPomodoro = async (userId, pomodoroData) => {
                 endTime: pomodoroData.endTime,
                 user: {
                     connect: { id: userId }
+                },
+                tasks: {
+                    connect: pomodoroData.taskIds.map(taskId => ({ id: taskId }))
                 }
             },
         });
@@ -47,6 +50,9 @@ const getPomodorosByUserId = async (userId) => {
     try {
         const pomodoros = await prisma.pomodoro.findMany({
             where: { userId: userId },
+            include: {
+                tasks: true
+            }
         });
         return pomodoros;
     } catch (error) {
