@@ -27,6 +27,7 @@ app.use(fileUpload({ useTempFiles: true }));
 app.use(cookieParser());
 
 const allowedOrigins = [process.env.PRODUCTION, "http://localhost:3000", "http://localhost:5173"];
+
 // Replace placeholder in swagger.yaml with actual PRODUCTION URL
 const swaggerPath = path.join(__dirname, "swagger.yaml");
 let swaggerDocument = YAML.load(swaggerPath);
@@ -59,7 +60,7 @@ app.get("/", (req, res) => {
 });
 
 // Swagger setup
-const swaggerDocument = YAML.load("./swagger.yaml");
+// const swaggerDocument = YAML.load("./swagger.yaml");
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 //auth route
