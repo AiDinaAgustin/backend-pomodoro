@@ -1,4 +1,4 @@
-const { createTask, updateTask, getTasksByUserId } = require("../../services/serviceTask");
+const { createTask, updateTask, getTasksByUserId, updateTaskCompletion } = require("../../services/serviceTask");
 
 const handleCreateTask = async (req, res) => {
     try {
@@ -42,8 +42,23 @@ const handleGetTasksByUserId = async (req, res) => {
     }
 }
 
+const handleUpdateTaskCompletion = async (req, res) => {
+    try {
+        const { taskId } = req.params;
+
+        const updatedTask = await updateTaskCompletion(parseInt(taskId));
+        
+        res.status(200).json({ data: updatedTask });
+        return;
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+        return;
+    }
+}
+
 module.exports = {
     handleCreateTask,
     handleUpdateTask,
-    handleGetTasksByUserId
+    handleGetTasksByUserId,
+    handleUpdateTaskCompletion
 }

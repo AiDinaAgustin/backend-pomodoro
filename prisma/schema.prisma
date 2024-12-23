@@ -19,6 +19,12 @@ enum PomodoroType {
   LONG_BREAK
 }
 
+enum PomodoroStatus {
+  ACTIVE
+  PAUSE
+  COMPLETED
+}
+
 model User {
   id         Int       @id @default(autoincrement())
   username   String    @unique
@@ -39,7 +45,8 @@ model Pomodoro {
   duration   Int
   startTime  DateTime
   endTime    DateTime
-  status     String
+  status     PomodoroStatus
+  pauseTime  DateTime?    // Add this line
   createdAt  DateTime     @default(now())
   updatedAt  DateTime     @updatedAt
   user       User         @relation(fields: [userId], references: [id])

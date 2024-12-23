@@ -6,12 +6,14 @@ const {
     handleCreatePomodoro,
     handleUpdatePomodoroStatus,
     handleGetPomodorosByUserId,
-    handleDeletePomodoro
+    handleDeletePomodoro,
+    handleUpdatePomodoroStatusBasedOnTasks
 } = require("../controllers/pomodoro/pomodoro");
 
 router.get("/pomodoros", auth, handleGetPomodorosByUserId);
 router.post("/pomodoros", auth, handleCreatePomodoro);
 router.put("/pomodoros/:pomodoroId", auth, handleUpdatePomodoroStatus);
 router.delete("/pomodoros/:pomodoroId", auth, handleDeletePomodoro);
+router.put("/pomodoros/:pomodoroId/completion", auth, handleUpdatePomodoroStatusBasedOnTasks);
 
 module.exports = router;
