@@ -43,8 +43,28 @@ const getTasksByUserId = async (userId) => {
     }
 }
 
+const updateTaskCompletion = async (taskId) => {
+    try {
+        const detailTasks = await prisma.detailTask.findMany({
+            where: { taskId: taskId },
+        });
+
+        const allCompleted = detailTasks.every(detailTask => detailTask.completed);
+
+        const updatedTask = await prisma.task.update({
+            where: { id: taskId },
+            data: { completed: allCompleted },
+        });
+
+        return updatedTask;
+    } catch (error) {
+        throw new Error(error.message);
+    }
+}
+
 module.exports = {
     createTask,
     updateTask,
-    getTasksByUserId
+    getTasksByUserId,
+    updateTaskCompletion
 }

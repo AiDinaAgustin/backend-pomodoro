@@ -3,7 +3,8 @@ const {
     getPomodoroById,
     updatePomodoroStatus,
     getPomodorosByUserId,
-    deletePomodoro
+    deletePomodoro,
+    updatePomodoroStatusBasedOnTasks
 } = require("../../services/servicePomodoro");
 
 const handleCreatePomodoro = async (req, res) => {
@@ -34,6 +35,10 @@ const handleCreatePomodoro = async (req, res) => {
         pomodoro.startTime = startTime;
         pomodoro.endTime = endTime;
 
+        if (!['ACTIVE', 'PAUSE', 'COMPLETED'].includes(pomodoro.status)) {
+            return res.status(400).json({ message: "Invalid pomodoro status" });
+        }
+
         const newPomodoro = await createPomodoro(userId, pomodoro);
         
         res.status(201).json({ data: newPomodoro });
@@ -53,7 +58,7 @@ const handleUpdatePomodoroStatus = async (req, res) => {
             return res.status(404).json({ message: "Pomodoro not found" });
         }
 
-        const newStatus = pomodoro.status === 'active' ? 'pause' : 'active';
+        const newStatus = pomodoro.status === 'ACTIVE' ? 'PAUSE' : 'ACTIVE';
 
         const updatedPomodoro = await updatePomodoroStatus(parseInt(pomodoroId), newStatus);
 
@@ -96,9 +101,25 @@ const handleDeletePomodoro = async (req, res) => {
     }
 }
 
+
+const handleUpdatePomodoroStatusBasedOnTasks = async (req, res) => {
+    try {
+        const { pomodoroId } = req.params;
+
+        const updatedPomodoro = await updatePomodoroStatusBasedOnTasks(parseInt(pomodoroId));
+        
+        res.status(200).json({ data: updatedPomodoro });
+        return;
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+        return;
+    }
+}
+
 module.exports = {
     handleCreatePomodoro,
     handleUpdatePomodoroStatus,
     handleGetPomodorosByUserId,
-    handleDeletePomodoro
+    handleDeletePomodoro,
+    handleUpdatePomodoroStatusBasedOnTasks
 }

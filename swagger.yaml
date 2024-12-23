@@ -184,6 +184,39 @@ paths:
                     example: Pomodoro not found
         '500':
           $ref: '#/components/responses/500'
+  /pomodoros/{pomodoroId}/completion:
+    put:
+      summary: Update the status of a Pomodoro based on task completion
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: pomodoroId
+          required: true
+          schema:
+            type: integer
+          description: The ID of the Pomodoro to update
+      responses:
+        '200':
+          description: Pomodoro status updated successfully based on task completion
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pomodoro'
+        '400':
+          $ref: '#/components/responses/400'
+        '404':
+          description: Pomodoro not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Pomodoro not found
+        '500':
+          $ref: '#/components/responses/500'
   /tasks:
     post:
       summary: Create a new Task
@@ -250,6 +283,39 @@ paths:
                 $ref: '#/components/schemas/Task'
         '400':
           $ref: '#/components/responses/400'
+        '500':
+          $ref: '#/components/responses/500'
+  /tasks/{taskId}/completion:
+    put:
+      summary: Update the completion status of a Task based on detail tasks
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: taskId
+          required: true
+          schema:
+            type: integer
+          description: The ID of the Task to update
+      responses:
+        '200':
+          description: Task completion status updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        '400':
+          $ref: '#/components/responses/400'
+        '404':
+          description: Task not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Task not found
         '500':
           $ref: '#/components/responses/500'
 components:
