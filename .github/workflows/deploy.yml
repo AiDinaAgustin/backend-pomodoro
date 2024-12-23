@@ -18,13 +18,17 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
+      - name: Add server to known hosts
+        run: |
+          ssh-keyscan -H 8.215.22.182 >> ~/.ssh/known_hosts
+
       - name: Copy files to server
         run: |
-          scp -r ./ user@8.215.22.182:/root/.ssh/backend-pomodoro
+          scp -r ./ root@8.215.22.182:/root/.ssh/backend-pomodoro
 
       - name: SSH commands to restart app using PM2
         run: |
-          ssh user@8.215.22.182 << 'EOF'
+          ssh root@8.215.22.182 << 'EOF'
           cd /root/.ssh/backend-pomodoro
           git pull origin main
           npm install
