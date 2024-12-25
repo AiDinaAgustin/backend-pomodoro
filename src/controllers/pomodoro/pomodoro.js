@@ -7,15 +7,11 @@ const {
     updatePomodoroStatusBasedOnTasks
 } = require("../../services/servicePomodoro");
 
+
 const handleCreatePomodoro = async (req, res) => {
     try {
         const userId = req.user.userToken;
         const pomodoro = req.body;
-
-        // Ubah validasi taskIds untuk mengizinkan array kosong
-        if (pomodoro.taskIds && !Array.isArray(pomodoro.taskIds)) {
-            return res.status(400).json({ message: "Task IDs should be an array if provided" });
-        }
 
         switch (pomodoro.type) {
             case 'POMODORO':

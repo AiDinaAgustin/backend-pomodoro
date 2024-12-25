@@ -14,13 +14,15 @@ const createPomodoro = async (userId, pomodoroData) => {
             }
         };
 
-        if (Array.isArray(pomodoroData.taskIds)) {
+        if (pomodoroData.taskIds && pomodoroData.taskIds.length > 0) {
             data.tasks = {
                 connect: pomodoroData.taskIds.map(taskId => ({ id: taskId }))
             };
         }
 
-        const pomodoro = await prisma.pomodoro.create({ data });
+        const pomodoro = await prisma.pomodoro.create({
+            data: data,
+        });
         return pomodoro;
     } catch (error) {
         throw new Error(error.message);
