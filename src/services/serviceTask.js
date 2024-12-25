@@ -62,9 +62,21 @@ const updateTaskCompletion = async (taskId) => {
     }
 }
 
+const deleteTask = async (taskId) => {
+    try {
+        const deletedTask = await prisma.task.delete({
+            where: { id: taskId },
+        });
+        return deletedTask;
+    } catch (error) {
+        throw new Error(error.message);
+    }
+}
+
 module.exports = {
     createTask,
     updateTask,
     getTasksByUserId,
-    updateTaskCompletion
+    updateTaskCompletion,
+    deleteTask,
 }
