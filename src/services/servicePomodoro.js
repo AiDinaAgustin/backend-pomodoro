@@ -3,20 +3,25 @@ const prisma = require("../db");
 
 const createPomodoro = async (userId, pomodoroData) => {
     try {
+        const data = {
+            type: pomodoroData.type,
+            duration: pomodoroData.duration,
+            status: pomodoroData.status,
+            startTime: pomodoroData.startTime,
+            endTime: pomodoroData.endTime,
+            user: {
+                connect: { id: userId }
+            }
+        };
+
+        if (pomodoroData.taskIds && pomodoroData.taskIds.length > 0) {
+            data.tasks = {
+                connect: pomodoroData.taskIds.map(taskId => ({ id: taskId }))
+            };
+        }
+
         const pomodoro = await prisma.pomodoro.create({
-            data: {
-                type: pomodoroData.type,
-                duration: pomodoroData.duration,
-                status: pomodoroData.status,
-                startTime: pomodoroData.startTime,
-                endTime: pomodoroData.endTime,
-                user: {
-                    connect: { id: userId }
-                },
-                tasks: {
-                    connect: pomodoroData.taskIds.map(taskId => ({ id: taskId }))
-                }
-            },
+            data: data,
         });
         return pomodoro;
     } catch (error) {
