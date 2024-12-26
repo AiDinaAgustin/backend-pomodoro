@@ -26,7 +26,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(fileUpload({ useTempFiles: true }));
 app.use(cookieParser());
 
-const allowedOrigins = [process.env.PRODUCTION, "http://localhost:3000", "http://localhost:5173"];
+const allowedOrigins = [process.env.PRODUCTION, process.env.PRODUCTION_FE, "http://localhost:3000", "http://localhost:5173"];
 
 // Replace placeholder in swagger.yaml with actual PRODUCTION URL
 const swaggerPath = path.join(__dirname, "swagger.yaml");
